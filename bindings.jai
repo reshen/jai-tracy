@@ -6,6 +6,8 @@
 
 
 
+TRACY_CALLSTACK :: 0;
+
 TracyPlotFormatEnum :: enum u32 {
     Number     :: 0;
     Memory     :: 1;
@@ -135,11 +137,13 @@ ___tracy_emit_memory_alloc_named :: (ptr: *void, size: u64, secure: s32, name: *
 ___tracy_emit_memory_alloc_callstack_named :: (ptr: *void, size: u64, depth: s32, secure: s32, name: *u8) -> void #foreign libtracy;
 ___tracy_emit_memory_free_named :: (ptr: *void, secure: s32, name: *u8) -> void #foreign libtracy;
 ___tracy_emit_memory_free_callstack_named :: (ptr: *void, depth: s32, secure: s32, name: *u8) -> void #foreign libtracy;
+___tracy_emit_memory_discard :: (name: *u8, secure: s32) -> void #foreign libtracy;
+___tracy_emit_memory_discard_callstack :: (name: *u8, secure: s32, depth: s32) -> void #foreign libtracy;
 
-___tracy_emit_message :: (txt: *u8, size: u64, callstack: s32) -> void #foreign libtracy;
-___tracy_emit_messageL :: (txt: *u8, callstack: s32) -> void #foreign libtracy;
-___tracy_emit_messageC :: (txt: *u8, size: u64, color: u32, callstack: s32) -> void #foreign libtracy;
-___tracy_emit_messageLC :: (txt: *u8, color: u32, callstack: s32) -> void #foreign libtracy;
+___tracy_emit_message :: (txt: *u8, size: u64, callstack_depth: s32) -> void #foreign libtracy;
+___tracy_emit_messageL :: (txt: *u8, callstack_depth: s32) -> void #foreign libtracy;
+___tracy_emit_messageC :: (txt: *u8, size: u64, color: u32, callstack_depth: s32) -> void #foreign libtracy;
+___tracy_emit_messageLC :: (txt: *u8, color: u32, callstack_depth: s32) -> void #foreign libtracy;
 
 ___tracy_emit_frame_mark :: (name: *u8) -> void #foreign libtracy;
 ___tracy_emit_frame_mark_start :: (name: *u8) -> void #foreign libtracy;
