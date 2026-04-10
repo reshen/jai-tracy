@@ -49,7 +49,7 @@
         #library,system,link_always "libc++";
     }
 } else {
-    FrameMark :: (name: *u8) #expand #no_debug {}
+    FrameMark :: (name: *u8 = null) #expand #no_debug {}
     SetThreadName:: (name: *u8) #expand #no_debug {}
 
     ZoneScoped :: ($name := "", text := "", color: u32 = 0, value: u64 = 0, location := #caller_location) #expand #no_debug {}
