@@ -135,12 +135,16 @@ message :: (p: *Metaprogram_Plugin, message: *Message) {
         if tc.subexpressions.count < plugin.min_size continue; // Too small!
         if plugin.should_instrument != null && !plugin.should_instrument(body) continue;
 
+        noprofile_skip: bool;
         for h.notes {
             if it.text == "NoProfile" {
                 log("[Tracy] Skipping \"%\" due to NoProfile note.\n", h.name);
-                continue;
+                // can simplify this if/when jai supports named for loop continue
+                noprofile_skip = true;
+                break;
             }
         }
+        if noprofile_skip  continue;
 
         new_statements : [..] *Code_Node;
 
