@@ -185,7 +185,7 @@ PREPEND_ZONE_CODE :: #code #Context._Tracy.ZoneScoped();
 #import "File";
 #import "String";
 
-MINIMUM_SIZE_DEFAULT :: 30;
+MINIMUM_SIZE_DEFAULT :: 1;
 
 My_Plugin :: struct {
     #as using base: Metaprogram_Plugin;
