@@ -5,7 +5,7 @@
     #load "bindings.jai";
 
     // Call this every frame.
-    FrameMark :: (name: *u8 = null) #expand #no_debug {
+    FrameMark :: inline (name: *u8 = null) #expand #no_debug {
         ___tracy_emit_frame_mark(name);
     }
 

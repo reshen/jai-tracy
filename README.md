@@ -1,6 +1,6 @@
 # Tracy bindings for Jai
 
-Jai bindings for the [Tracy profiler](https://github.com/wolfpld/tracy) v0.11.1
+Jai bindings for the [Tracy profiler](https://github.com/wolfpld/tracy) v0.13.1
 
 It’s originally based on [vrcamillo/jai-tracy](https://github.com/vrcamillo/jai-tracy), but modified to work as an auto-instrumenting metaprogram plugin (like modules/Iprof).
 
