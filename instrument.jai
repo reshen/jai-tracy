@@ -70,7 +70,7 @@ init :: (p: *Metaprogram_Plugin, options: [] string) -> bool {
 
                     plugin.instrument_module_allow_list = split(maybe_module_args, ",");
                     cursor += 1;
-                    log("[Tracy] Allow-listing only modules: %", plugin.instrument_module_allow_list);
+                    // log("[Tracy] Allow-listing only modules: %", plugin.instrument_module_allow_list);
                 }
 
             case "-csv";
@@ -152,7 +152,7 @@ message :: (p: *Metaprogram_Plugin, message: *Message) {
         noprofile_skip: bool;
         for h.notes {
             if it.text == "NoProfile" {
-                log("[Tracy] Skipping \"%\" due to NoProfile note.\n", h.name);
+                // log("[Tracy] Skipping \"%\" due to NoProfile note.\n", h.name);
                 // can simplify this if/when jai supports named for loop continue
                 noprofile_skip = true;
                 break;
