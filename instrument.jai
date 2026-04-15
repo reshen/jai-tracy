@@ -39,43 +39,52 @@ init :: (p: *Metaprogram_Plugin, options: [] string) -> bool {
     while cursor < options.count {
         s := options[cursor];
         if s == {
-          case "-min_size";
-            if cursor >= options.count-1 {
-                log_error("[Tracy] Missing argument to -min_size\n");
+            case "-min_size";
+                if cursor >= options.count-1 {
+                    log_error("[Tracy] Missing argument to -min_size\n");
+                    return false;
+                }
+
+                arg := options[cursor+1];
+                result, success, remainder := string_to_int(arg);
+                if !success {
+                    log_error("[Tracy] Argument to -min_size was expected to be an integer, but we got '%'.\n", arg);
+                    return false;
+                }
+
+                if eat_spaces(remainder) {
+                    log_error("[Tracy] Found junk at the end of the argument to -min_size '%'.\n", remainder);
+                    return false;
+                }
+
+                plugin.min_size = result;
+                cursor += 2;
+
+            case "-modules";
+                plugin.instrument_modules = true;
+                cursor += 1;
+
+                if cursor < options.count {
+                    maybe_module_args := options[cursor];
+                    if begins_with(maybe_module_args, "-")  continue;
+
+                    plugin.instrument_module_allow_list = split(maybe_module_args, ",");
+                    cursor += 1;
+                    log("[Tracy] Allow-listing only modules: %", plugin.instrument_module_allow_list);
+                }
+
+            case "-csv";
+                if cursor >= options.count-1 {
+                    log_error("[Tracy] Missing argument to -csv\n");
+                    return false;
+                }
+
+                plugin.csv_output_filename = options[cursor+1];
+                cursor += 2;
+
+            case;
+                log_error("[Tracy] Unknown command line argument '%'\n", s);
                 return false;
-            }
-
-            arg := options[cursor+1];
-            result, success, remainder := string_to_int(arg);
-            if !success {
-                log_error("[Tracy] Argument to -min_size was expected to be an integer, but we got '%'.\n", arg);
-                return false;
-            }
-
-            if eat_spaces(remainder) {
-                log_error("[Tracy] Found junk at the end of the argument to -min_size '%'.\n", remainder);
-                return false;
-            }
-
-            plugin.min_size = result;
-            cursor += 2;
-
-          case "-modules";
-            plugin.instrument_modules = true;
-            cursor += 1;
-
-          case "-csv";
-            if cursor >= options.count-1 {
-                log_error("[Tracy] Missing argument to -csv\n");
-                return false;
-            }
-
-            plugin.csv_output_filename = options[cursor+1];
-            cursor += 2;
-
-          case;
-            log_error("[Tracy] Unknown command line argument '%'\n", s);
-            return false;
         }
     }
 
@@ -126,9 +135,14 @@ message :: (p: *Metaprogram_Plugin, message: *Message) {
                 case;
                     if !plugin.instrument_modules continue;
 
+                    allow_list: [..]string;
+                    for plugin.instrument_module_allow_list  array_add(*allow_list, it);
+
                     // Don't profile stuff that is in Tracy itself:
                     // @Robustness: Hardcoded module name for now.
-                    if import.module_name == "tracy"  continue;
+                    array_add(*allow_list, "tracy");
+
+                    if !array_find(allow_list, import.module_name)  continue;
             }
         }
 
@@ -209,6 +223,7 @@ My_Plugin :: struct {
     csv_output_filename: string;
     min_size := MINIMUM_SIZE_DEFAULT;
     instrument_modules := false;
+    instrument_module_allow_list: []string;  // when empty, includes all modules except tracy itself. ignored when instrument_modules is false.
 
     //
     // The user should not mess with these:
