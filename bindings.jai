@@ -169,7 +169,7 @@ ___tracy_custom_name_lockable_ctx :: (lockdata: *__tracy_lockable_context_data, 
 
 
 #if OS == .WINDOWS {
-    libtracy :: #library "windows/libtracy";
+    libtracy :: #library "windows/TracyClient";
 } else #if OS == .LINUX {
     libtracy :: #library "linux/libtracy";
 } else #if OS == .MACOS {
